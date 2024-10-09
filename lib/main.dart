@@ -1,6 +1,7 @@
+import 'package:despesas_app/models/transacition.dart';
 import 'package:flutter/material.dart';
 
-main() => runApp(ExpensesApp());
+main() => runApp(const ExpensesApp());
 
 class ExpensesApp extends StatelessWidget {
   const ExpensesApp({super.key});
@@ -14,32 +15,86 @@ class ExpensesApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget{
+class MyHomePage extends StatelessWidget {
+  final _transactions = [
+    Transacition(
+        id: 't1',
+        title: 'Novo tenis de corrida',
+        value: 310.76,
+        date: DateTime.now()),
+    Transacition(
+        id: 't2', title: 'Conta de luz', value: 211.30, date: DateTime.now()),
+  ];
+
+  MyHomePage({super.key});
+
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Despesas pesoais"),
+        title: const Text("Despesas pesoais"),
       ),
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children:[
-          Container(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const SizedBox(
             width: double.infinity,
             child: Card(
-              child: Text("Grafico"),
               elevation: 5,
               color: Colors.blue,
+              child: Text("Grafico"),
             ),
           ),
-          Container(
-            width: double.infinity,
-            child: Card(
-              child: Text("Lista transações"),
-              elevation: 5,
-            ),
+          Column(
+            children: _transactions.map((tr) {
+              return Card(
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                        color: Colors.purple,
+                        width: 2,
+                      )),
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        'R\$ ${tr.value.toStringAsFixed(2)}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Colors.purple,
+                        ),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          tr.title,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          tr.date.toString(),
+                          style: const TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              );
+            }).toList(),
           )
-        ]
+        ],
       ),
     );
   }
