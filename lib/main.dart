@@ -1,5 +1,7 @@
 import 'package:despesas_app/models/transacition.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 main() => runApp(const ExpensesApp());
 
@@ -11,6 +13,11 @@ class ExpensesApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: MyHomePage(),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      supportedLocales: [const Locale('pt', 'BR')],
     );
   }
 }
@@ -82,7 +89,8 @@ class MyHomePage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          tr.date.toString(),
+                          DateFormat(DateFormat.YEAR_MONTH_DAY, 'pt_Br')
+                              .format(tr.date),
                           style: const TextStyle(
                             color: Colors.grey,
                           ),
