@@ -2,27 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'dart:math';
 
-
 import 'componets/chat.dart';
 import 'componets/transaction_form.dart';
 import 'componets/transaction_list.dart';
 import 'models/my_transaction.dart';
 import 'services/transaction_db.dart';
 
+// Função principal que inicia o aplicativo Flutter
 void main() => runApp(ExpensesApp());
 
+// Classe principal do aplicativo que é um StatelessWidget
 class ExpensesApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Define o tema padrão do aplicativo
     final ThemeData tema = ThemeData();
 
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MyHomePage(),
+      debugShowCheckedModeBanner: false, // Remove a faixa de debug
+      home: MyHomePage(), // Define a página inicial do aplicativo
       theme: tema.copyWith(
         colorScheme: tema.colorScheme.copyWith(
-          primary: Colors.purple,
-          secondary: Colors.amber,
+          primary: Colors.purple, // Cor primária do tema
+          secondary: Colors.amber, // Cor secundária do tema
         ),
         textTheme: tema.textTheme.copyWith(
           headlineMedium: const TextStyle(
@@ -39,7 +41,7 @@ class ExpensesApp extends StatelessWidget {
           ),
         ),
         appBarTheme: AppBarTheme(
-          color: Theme.of(context).colorScheme.primary,
+          color: Theme.of(context).colorScheme.primary, // Cor da AppBar
           titleTextStyle: const TextStyle(
             fontFamily: 'QuickSand',
             fontSize: 20,
@@ -51,27 +53,30 @@ class ExpensesApp extends StatelessWidget {
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate
       ],
-      supportedLocales: const [Locale('pt', 'BR')],
+      supportedLocales: const [Locale('pt', 'BR')], // Localização para português do Brasil
     );
   }
 }
 
+// Página inicial do aplicativo que é um StatefulWidget
 class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
+// Estado associado ao MyHomePage
 class _MyHomePageState extends State<MyHomePage> {
-  List<MyTransaction> _transactions = [];
-  List<MyTransaction> _filteredTransactions = [];
-  String _searchQuery = '';
+  List<MyTransaction> _transactions = []; // Lista de transações
+  List<MyTransaction> _filteredTransactions = []; // Lista de transações filtradas
+  String _searchQuery = ''; // Consulta de busca
 
   @override
   void initState() {
     super.initState();
-    _loadTransactions();
+    _loadTransactions(); // Carrega as transações ao iniciar
   }
 
+  // Carrega as transações do banco de dados
   Future<void> _loadTransactions() async {
     final data = await TransactionDataBase.instance.getTransactions();
     setState(() {
@@ -80,6 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  // Adiciona uma nova transação
   void _addTransaction(String title, double value, DateTime date) async {
     final newTransaction = MyTransaction(
       id: Random().nextDouble().toString(),
@@ -90,14 +96,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
     await TransactionDataBase.instance.insertTransaction(newTransaction);
     _loadTransactions(); // Atualiza a UI
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(); // Fecha o modal
   }
 
+  // Remove uma transação pelo ID
   void _removeTransaction(String id) async {
     await TransactionDataBase.instance.removeTransaction(id);
     _loadTransactions(); // Atualiza a UI
   }
 
+  // Abre o formulário de transação em um modal
   void _openTransactionFormModal(BuildContext context) {
     showModalBottomSheet(
         context: context,
