@@ -47,7 +47,9 @@ class _TransactionFormState extends State<TransactionForm> {
       lastDate: DateTime.now(), // Data máxima
     ).then((pickedDate) {
       // Atualiza a data selecionada
-      _selectedDate = pickedDate!;
+      setState(() {
+         _selectedDate = pickedDate!;
+      });
     });
   }
 
