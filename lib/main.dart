@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'dart:math';
 
@@ -9,7 +10,15 @@ import 'models/my_transaction.dart';
 import 'services/transaction_db.dart';
 
 // Função principal que inicia o aplicativo Flutter
-void main() => runApp(ExpensesApp());
+void main(){
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]).then((_) {
+    runApp(ExpensesApp());
+  });
+}
 
 // Classe principal do aplicativo que é um StatelessWidget
 class ExpensesApp extends StatelessWidget {

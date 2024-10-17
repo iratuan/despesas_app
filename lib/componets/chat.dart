@@ -53,28 +53,31 @@ class Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 1, // Elevação do cartão para sombra
-      margin: const EdgeInsets.all(15), // Margem ao redor do cartão
-      child: Container(
-        padding: EdgeInsets.all(10), // Espaçamento interno do container
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment
-              .spaceAround, // Espaçamento uniforme entre as barras
-          children: groupedTransactions.map((tr) {
-            return Flexible(
-              fit: FlexFit
-                  .tight, // As barras ocupam espaço disponível uniformemente
-              child: ChartBar(
-                label: tr['day'].toString(), // Rótulo do dia
-                value: (tr['value'] as double), // Valor do dia
-                percentage: _weekTotalValue == 0
-                    ? 0
-                    : (tr['value'] as double) /
-                        _weekTotalValue, // Porcentagem do total semanal
-              ),
-            );
-          }).toList(),
+    return Container(
+      height: (MediaQuery.sizeOf(context).height/5) , // Define a altura do container
+      child: Card(    
+        elevation: 1, // Elevação do cartão para sombra
+        margin: const EdgeInsets.all(15), // Margem ao redor do cartão
+        child: Container(
+          padding: EdgeInsets.all(10), // Espaçamento interno do container
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment
+                .spaceAround, // Espaçamento uniforme entre as barras
+            children: groupedTransactions.map((tr) {
+              return Flexible(
+                fit: FlexFit
+                    .tight, // As barras ocupam espaço disponível uniformemente
+                child: ChartBar(
+                  label: tr['day'].toString(), // Rótulo do dia
+                  value: (tr['value'] as double), // Valor do dia
+                  percentage: _weekTotalValue == 0
+                      ? 0
+                      : (tr['value'] as double) /
+                          _weekTotalValue, // Porcentagem do total semanal
+                ),
+              );
+            }).toList(),
+          ),
         ),
       ),
     );

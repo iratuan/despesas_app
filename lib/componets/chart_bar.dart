@@ -39,7 +39,7 @@ class ChartBar extends StatelessWidget {
         ),
         // Container para representar a própria barra
         Container(
-          height: 60,
+          height: 0.4 *  (MediaQuery.sizeOf(context).height/5), // Define a altura do container
           width: 10,
           child: Stack(
             alignment:
