@@ -1,11 +1,13 @@
-import 'package:despesas_app/componets/chat.dart';
-import 'package:despesas_app/componets/transaction_form.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'dart:math';
+
+import 'componets/chat.dart';
+import 'componets/transaction_form.dart';
 
 import 'componets/transaction_list.dart';
-import 'models/transaction.dart';
+import 'models/my_transaction.dart';
+import 'services/transaction_db.dart';
 
 void main() => runApp(ExpensesApp());
 
@@ -60,27 +62,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Transaction> _transactions = [];
+  
+  List<MyTransaction> _transactions = [];
 
-  List<Transaction> get _recentTransactions {
-    return _transactions.where((tr) {
-      return tr.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
-    }).toList();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadTransactions();
   }
 
-  void _addTransaction(String title, double value, DateTime date) {
-    final newTransaction = Transaction(
+  Future<void> _loadTransactions() async {
+    final data = await TransactionDataBase.instance.getTransactions();
+    setState(() {
+      _transactions = data;
+    });
+  }
+
+  void _addTransaction(String title, double value, DateTime date) async {
+    final newTransaction = MyTransaction(
       id: Random().nextDouble().toString(),
       title: title,
       value: value,
       date: date,
     );
 
-    setState(() {
-      _transactions.add(newTransaction);
-    });
-
+    await TransactionDataBase.instance.insertTransaction(newTransaction);
+    _loadTransactions(); // Atualiza a UI
     Navigator.of(context).pop();
+  }
+
+  void _removeTransaction(String id) async {
+    await TransactionDataBase.instance.removeTransaction(id);
+    _loadTransactions(); // Atualiza a UI
   }
 
   void _openTransactionFormModal(BuildContext context) {
@@ -91,11 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
-  void _removeTransaction(String id) {
-    setState(() {
-      _transactions.removeWhere((tr) => tr.id == id);
-    });
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(_recentTransactions),
+            Chart(_transactions),
             TransactionList(
               transactions: _transactions,
               onRemove: _removeTransaction,

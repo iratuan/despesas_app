@@ -1,9 +1,10 @@
-import 'package:despesas_app/models/transaction.dart';
+import 'package:despesas_app/models/my_transaction.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+
 class TransactionList extends StatelessWidget {
-  final List<Transaction> transactions;
+  final List<MyTransaction> transactions;
   final void Function(String) onRemove;
 
   const TransactionList({super.key, required this.transactions, required this.onRemove});
@@ -19,7 +20,7 @@ class TransactionList extends StatelessWidget {
                   "Nenhuma transação cadastrada",
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Container(
@@ -36,7 +37,7 @@ class TransactionList extends StatelessWidget {
               itemBuilder: (ctx, index) {
                 final tr = transactions[index];
                 return Card(
-                  margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
                   elevation: 1,
                   child: ListTile(
                     leading: CircleAvatar(
@@ -47,7 +48,7 @@ class TransactionList extends StatelessWidget {
                         child: FittedBox(
                           child: Text(
                             'R\$${tr.value}',
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ),
                       ),
@@ -62,7 +63,7 @@ class TransactionList extends StatelessWidget {
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     trailing: IconButton(
-                      icon: Icon(Icons.delete),
+                      icon: const Icon(Icons.delete),
                       color: Theme.of(context).colorScheme.error,
                       onPressed: () => onRemove(tr.id),
                     ),
