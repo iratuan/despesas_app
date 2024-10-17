@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'dart:math';
 
+
 import 'componets/chat.dart';
 import 'componets/transaction_form.dart';
-
 import 'componets/transaction_list.dart';
 import 'models/my_transaction.dart';
 import 'services/transaction_db.dart';
@@ -62,9 +62,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
   List<MyTransaction> _transactions = [];
-
+  List<MyTransaction> _filteredTransactions = [];
+  String _searchQuery = '';
 
   @override
   void initState() {
@@ -76,6 +76,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final data = await TransactionDataBase.instance.getTransactions();
     setState(() {
       _transactions = data;
+      _filteredTransactions = data; // Inicialmente sem filtro
     });
   }
 
@@ -105,13 +106,36 @@ class _MyHomePageState extends State<MyHomePage> {
         });
   }
 
+  // Filtra a lista de transações com base na busca
+  void _filterTransactions(String query) {
+    final filtered = _transactions.where((transaction) {
+      final titleLower = transaction.title.toLowerCase();
+      final searchLower = query.toLowerCase();
+      return titleLower.contains(searchLower); // Filtra pelo título
+    }).toList();
 
+    setState(() {
+      _searchQuery = query;
+      _filteredTransactions = filtered;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Despesas pessoais"),
+        title: TextField(
+          onChanged: (value) {
+            _filterTransactions(value); // Atualiza a busca
+          },
+          decoration: const InputDecoration(
+            hintText: 'Buscar transações...',
+            border: InputBorder.none,
+            hintStyle: TextStyle(color: Colors.white70),
+            icon: Icon(Icons.search, color: Colors.white),
+          ),
+          style: const TextStyle(color: Colors.white),
+        ),
         backgroundColor: Theme.of(context).colorScheme.primary,
         actions: [
           IconButton(
@@ -125,9 +149,9 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(_transactions),
+            Chart(_filteredTransactions), // Usa a lista filtrada
             TransactionList(
-              transactions: _transactions,
+              transactions: _filteredTransactions, // Usa a lista filtrada
               onRemove: _removeTransaction,
             ),
           ],
