@@ -77,6 +77,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   List<MyTransaction> _transactions = []; // Lista de transações
   List<MyTransaction> _filteredTransactions = []; // Lista de transações filtradas
+  // ignore: unused_field
   String _searchQuery = ''; // Consulta de busca
 
   @override
