@@ -16,7 +16,7 @@ class TransactionList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(  
       margin: EdgeInsets.only(bottom: 30),    
-      height: MediaQuery.of(context).size.height * 0.5, // Define a altura do container
+      height: MediaQuery.of(context).size.height * 0.6, // Define a altura do container
       child: transactions.isEmpty
           ? Column(
               children: [
